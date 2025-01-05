@@ -5,35 +5,30 @@
 
 
 
-
-// TODO: Checking naming conventions to make sure they line up with the rest of the engine.
 class Level
 {
 	int m_levelNum;
-	//Seems like consts are exempt from m_ naming scheme
+	//Keeping inline with engine naming conventions consts are exempt from m_ naming scheme
 	const std::string FILE_NAME;
 	/*
-	Justification for 2D vector: A 2D vector is optimal in this case, compared to a linked list or 2D array. Unknown CSV size at runtime rules out an array unless you set a huge literal number array size being extremly memory inefficient. A linked list while it's size can be altered during runtime, it's not optimal in this situation as element access is in linear time while vectors are constant. Deletion isn't a factor in this case as nothing is being deleted in this process. A 2D vector while slower compared to a single vector increases readability tremendously and especially while loading times are still sub 2 second this isn't a problem currently. 
+	Justification for 2D vector: A 2D vector is optimal in this case, compared to a linked list or 2D array. Unknown CSV size at runtime rules out an array unless you set a huge literal number array size being extremly memory inefficient. A linked list while it's size can be altered during runtime, it's not optimal in this situation as element access is in linear time while vectors are constant. Deletion isn't a factor in this case as nothing is being deleted in this process. A 2D vector while slower compared to a single vector, increases readability tremendously and especially while loading times are still sub 2 second this isn't a problem currently. 
 	*/
 	std::vector<std::vector<std::string>> m_allLines;
 
 	/*
-	TODO:Check this justification
-
-	Justification for unordered map: Compared to map, an unordered map has a better time complexity. Unordered O(n) vs Ordered O(Log(N)), which is especially vital when a lot of element insertion, deletion and search is taking place. While space might be worse than a traditional map I belive the speed increase should account for this. 
+	Justification for unordered map: Compared to map, an unordered map has a better time complexity. Unordered O(n) vs Ordered O(Log(N)), which is especially vital when a lot of element insertion, deletion and search is taking place in this unordered_map. While space might be worse than a traditional map I belive the speed increase should account for this. 
 	*/
 	std::unordered_map<std::string, int> m_headerIndex;
 
 	//Making these literal values into single variables allows easy altering in the future.
-	//This int should be set to a digit cell such as Xpos. Not something like File location. If it's set incorrectly IsHeader function will return incorrect values.
+	//This int should be set to a digit cell such as Xpos. NOT something like File location. If it's set incorrectly IsHeader function will return incorrect values.
 	const int M_DIGIT_VARIABLE_INDEX = 1; //Default 1 | Xpos variable
 
-	const char M_DELIMITER = ','; // Default ","
+	const char M_DELIMITER = ','; // Default "," | Default for a CSV
 	
 
 	/*
 	These variables are used to find the index of the variable in the row vector. Other methods were considered but I belive this is the most scalable and simple way.
-	Justification:
 	While this is a lot of variables to be created all together, with 31 strings (Keeping sensible string lengths) should only amount to ~2kb, which I belive is acceptable for how much versatility this provides. This amount of variable are also found in the player header file and justified there with "Player constants there's only one player so this is fine", while this is strings compared to doubles and ints, there is only one of these classes created so I belive this is acceptable.
 
 	m_ naming conventions not found on the const variables in player.h so it's not done here 
@@ -89,7 +84,7 @@ public:
 	bool StringToBool(const std::string& inpString);
 
 
-	//Object Parsing - Induvidual functions instead of functions like ParseGameObject or ParseLayer makes it a lot easier to scale, maintain and read. Scaling for the rest of the game object types as found in objecttypes.h like reactor is extremly simple and shouldn't affect anything else in the process aas they are all seperate.
+	//Object Parsing - Induvidual functions instead of functions like ParseGameObject or ParseLayerObject makes it a lot easier to scale, maintain and read. Scaling for the rest of the game object types as found in objecttypes.h like reactor is extremly simple and shouldn't affect anything else in the process aas they are all kept seperate.
 	void ParseLayer(const std::vector<std::string>& inputRow);
 	void ParseBoundary(const std::vector<std::string>& inputRow);
 	void ParseFinish(const std::vector<std::string>& inputRow);
