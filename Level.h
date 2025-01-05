@@ -1,37 +1,43 @@
 #pragma once
-#include "level.h"
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <map>
-#include <algorithm>
-#include "../Layers/Layer.h"
-#include "../Engine/ErrorLogger.h"
-#include "../Engine/ObjectManager.h"
-#include "../GameObjects/objecttypes.h"
-#include "../GameObjects/BoundaryObject.h"
-#include "../Layers/TileLayer.h"
-#include "../GameObjects/Scene.h"
-#include "../GameObjects/PickUp.h"
-#include "../GameObjects/FuelPump.h"
-#include "../GameObjects/Enemy.h"
-#include "../GameObjects/Player.h"
+#include <unordered_map> 
+#include <string>
+#include <vector>
 
 
 
+
+// TODO: Checking naming conventions to make sure they line up with the rest of the engine.
 class Level
 {
-	int levelNum;
-	const std::string fileName;
-
-	std::vector<std::vector<std::string>> allLines;
-	std::map<std::string, int> headerIndex;
-
-	const char delimiter = ',';
+	int m_levelNum;
+	//Seems like consts are exempt from m_ naming scheme
+	const std::string FILE_NAME;
+	/*
+	Justification for 2D vector: A 2D vector is optimal in this case, compared to a linked list or 2D array. Unknown CSV size at runtime rules out an array unless you set a huge literal number array size being extremly memory inefficient. A linked list while it's size can be altered during runtime, it's not optimal in this situation as element access is in linear time while vectors are constant. Deletion isn't a factor in this case as nothing is being deleted in this process. A 2D vector while slower compared to a single vector increases readability tremendously and especially while loading times are still sub 2 second this isn't a problem currently. 
+	*/
+	std::vector<std::vector<std::string>> m_allLines;
 
 	/*
+	TODO:Check this justification
+
+	Justification for unordered map: Compared to map, an unordered map has a better time complexity. Unordered O(n) vs Ordered O(Log(N)), which is especially vital when a lot of element insertion, deletion and search is taking place. While space might be worse than a traditional map I belive the speed increase should account for this. 
+	*/
+	std::unordered_map<std::string, int> m_headerIndex;
+
+	//Making these literal values into single variables allows easy altering in the future.
+	//This int should be set to a digit cell such as Xpos. Not something like File location. If it's set incorrectly IsHeader function will return incorrect values.
+	const int M_DIGIT_VARIABLE_INDEX = 1; //Default 1 | Xpos variable
+
+	const char M_DELIMITER = ','; // Default ","
+	
+
+	/*
+	These variables are used to find the index of the variable in the row vector. Other methods were considered but I belive this is the most scalable and simple way.
 	Justification:
-	While this is a lot of variables to be created all together, with 31 strings (Keeping sensible string lengths) should only amount to ~2kb, which isn't too bad for how much versatility this provides.
+	While this is a lot of variables to be created all together, with 31 strings (Keeping sensible string lengths) should only amount to ~2kb, which I belive is acceptable for how much versatility this provides. This amount of variable are also found in the player header file and justified there with "Player constants there's only one player so this is fine", while this is strings compared to doubles and ints, there is only one of these classes created so I belive this is acceptable.
+
+	m_ naming conventions not found on the const variables in player.h so it's not done here 
+
 	Usage:
 	Strings: If you want to change the CSV file headers you are able to change them here
 	*/
@@ -48,7 +54,7 @@ class Level
 	const std::string HEADER_TILE_HEIGHT = "TILE_HEIGHT";
 	const std::string HEADER_TILESET = "TILESET";
 	const std::string HEADER_TILESET_WIDTH = "TILESET_WIDTH";
-	const std::string HEADER_TILESET_HEIGHT = "TILESET_HEIGTH"; //Height mispell as default, correct to correct spelling if nessessary
+	const std::string HEADER_TILESET_HEIGHT = "TILESET_HEIGTH"; //Height mispell as default
 	const std::string HEADER_HAS_COLLISION = "HAS_COLLISION";
 	const std::string HEADER_OBJECT_TYPE = "OBJECT_TYPE";
 	const std::string HEADER_IMAGE = "IMAGE";
@@ -75,10 +81,15 @@ public:
 
 	~Level();
 
-	bool parseConfigFile(const std::string& fileName);
-	bool isHeader(const std::vector<std::string>& inputVector);
-	void parseHeaders(const std::vector<std::string>& inputRow);
 
+	//Helper Functions - These helper functions are here for simplicity within the other functions, keeping repeatable code seperate keeps everything readable and easy development in future.
+	bool ParseConfigFile(const std::string& fileName);
+	bool IsHeader(const std::vector<std::string>& inputVector);
+	void ParseHeaders(const std::vector<std::string>& inputRow);
+	bool StringToBool(const std::string& inpString);
+
+
+	//Object Parsing - Induvidual functions instead of functions like ParseGameObject or ParseLayer makes it a lot easier to scale, maintain and read. Scaling for the rest of the game object types as found in objecttypes.h like reactor is extremly simple and shouldn't affect anything else in the process aas they are all seperate.
 	void ParseLayer(const std::vector<std::string>& inputRow);
 	void ParseBoundary(const std::vector<std::string>& inputRow);
 	void ParseFinish(const std::vector<std::string>& inputRow);
@@ -87,10 +98,7 @@ public:
 	void ParseFuelPump(const std::vector<std::string>& inputRow);
 	void ParseEnemy(const std::vector<std::string>& inputRow);
 	void ParsePlayer(const std::vector<std::string>& inputRow);
-	std::string GetValue(const std::string& header, const std::vector<std::string>& inputRow);
 
-	//std::vector<std::string> split(const std::string& string, char delimiter);
-	bool StringToBool(const std::string& inpString);
-
+	//Main Function
 	bool LoadLevel();
 };
