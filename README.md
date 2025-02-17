@@ -1,6 +1,6 @@
-## Games Programming 1 - Assignment - 100/100
+## Games Programming 1 - Assignment
 
-- This code was for my games programming 1 assignment. For which I got 100/100. <br>
+- This code was for my games programming 1 assignment. Marks - 100/100 <br>
 - The task was to create a CSV parser than intakes a given configuration file and loads a level dynamically from it. <br>
 - This system is used alongside an in-house framework called hornet. <br>
 - I focused heavily on scalable and maintainable code as if it would be needed to be used in the future by other developers. <br>
