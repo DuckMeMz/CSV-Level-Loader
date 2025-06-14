@@ -44,8 +44,6 @@ target_link_libraries(CSVLevelLoader PRIVATE
 
 set(PROGRAM_FOLDER "${SRC_DIR}/Program")
 
-add_executable(CSVLevelLoader ${SOURCES})
-
 # Copy program
 add_custom_command(TARGET CSVLevelLoader POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
