@@ -5,7 +5,6 @@ project(CSVLevelLoader)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-# Enable parallel compilation with MSVC
 if (MSVC)
     add_compile_options(/MP)
 endif()
@@ -44,14 +43,16 @@ target_link_libraries(CSVLevelLoader PRIVATE
 
 set(PROGRAM_FOLDER "${SRC_DIR}/Program")
 
-# Copy Program
+add_executable(CSVLevelLoader ${SOURCES})
+
+# Copy program
 add_custom_command(TARGET CSVLevelLoader POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
     "${PROGRAM_FOLDER}"
     "$<TARGET_FILE_DIR:CSVLevelLoader>/Program"
 )
 
-# Copy DLLs into output root
+# Copy DLLs into root
 file(GLOB SDL_DLLS "${PROGRAM_FOLDER}/*.dll")
 foreach(dll ${SDL_DLLS})
     add_custom_command(TARGET CSVLevelLoader POST_BUILD
