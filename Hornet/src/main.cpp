@@ -40,8 +40,10 @@ int main(int argc, char* argv[])
     // These two lines are for memory leak checking
     // May require Visual Studio
 #ifdef _MSC_VER
+#ifdef _DEBUG
     _CrtMemState memstart, memend, memdiff;
     _CrtMemCheckpoint(&memstart);
+#endif //_DEBUG
 #endif // _MSC_VER
 
     // This runs the program

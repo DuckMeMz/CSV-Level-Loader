@@ -100,7 +100,7 @@ void Player::ProcessInput(double frameTime)
 			{
 				m_thrustVolume += THRUST_VOLUME_STEP * frameTime;
 				if (m_thrustVolume > THRUST_VOLUME_THRESHOLD) m_thrustVolume = THRUST_VOLUME_THRESHOLD;
-				HtAudio::instance.SetChannelVolume(m_thrustSoundChannel, m_thrustVolume / THRUST_VOLUME_THRESHOLD);
+				HtAudio::instance.SetChannelVolume(m_thrustSoundChannel, (m_thrustVolume / THRUST_VOLUME_THRESHOLD));
 			}
 		}
 		else if (m_thrustSoundChannel >= 0)

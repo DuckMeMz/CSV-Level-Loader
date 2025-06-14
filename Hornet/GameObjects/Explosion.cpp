@@ -37,6 +37,7 @@ void Explosion::Animate(double frameTime)
 	if (m_currentFrame == 0 && m_explosionSound != NO_SOUND_INDEX)
 	{
 		m_explosionSoundChannel = HtAudio::instance.Play(m_explosionSound);
+		HtAudio::instance.SetChannelVolume(m_explosionSoundChannel, 0.35);
 	}
 
 	m_currentFrame = m_currentFrame + m_animationSpeed * frameTime;
@@ -45,6 +46,7 @@ void Explosion::Animate(double frameTime)
 		//Stop the explosion sound and deactivate
 		if (m_explosionSoundChannel > -1)
 		{
+			HtAudio::instance.SetChannelVolume(m_explosionSoundChannel, 1);
 			HtAudio::instance.Stop(m_explosionSoundChannel);
 			m_explosionSound = NO_SOUND_INDEX;
 		}

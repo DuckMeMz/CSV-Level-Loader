@@ -39,7 +39,7 @@ void Game::Update(double frametime)
 
 void Game::OnSuspend()
 {
-
+    HtAudio::instance.StopAllChannels();
 }
 
 void Game::OnResume()
