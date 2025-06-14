@@ -22,6 +22,7 @@ file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
     "${SRC_DIR}/src/*.cpp" "${SRC_DIR}/src/*.h"
 )
 
+add_executable(CSVLevelLoader ${SOURCES})
 
 #SDL includes
 target_include_directories(CSVLevelLoader PUBLIC
