@@ -1,0 +1,3 @@
+#C-Style as the engine is written in was confusing the system. All my personal code is written as C++
+*.h linguist-language=C++
+*.c linguist-vendored
